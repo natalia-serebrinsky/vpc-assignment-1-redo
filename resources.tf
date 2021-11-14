@@ -34,10 +34,10 @@ resource "aws_instance" "web"{
 resource "aws_subnet" "private_subnet"{
   count = var.subnets
   vpc_id = aws_vpc.main.id
-  cidr_block = var.cidr_block[count.index + "${var.two}"]
+  cidr_block = var.cidr_block[count.index + "${var.subnets}"]
   availability_zone = var.availability_zone[count.index]
   tags = {
-      Name = "Private subnet ${count.index} + ${var.two}"
+      Name = "Private subnet ${count.index}"
   }
 }
 

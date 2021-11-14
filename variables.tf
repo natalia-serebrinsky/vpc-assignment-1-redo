@@ -30,6 +30,6 @@ variable "db"{
 variable "web"{
 	default = 2
 }
-variable "two"{
+variable "natgw"{
 	default = 2
 }
