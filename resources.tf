@@ -8,6 +8,9 @@ resource "aws_subnet" "public_subnet"{
   vpc_id = aws_vpc.main.id
 	cidr_block = var.cidr_block[count.index]
   availability_zone = var.availability_zone[count.index]
+  tags = {
+      Name = "Public subnet ${count.index}"
+  }
 }
 
 resource "aws_instance" "web"{
@@ -21,8 +24,8 @@ resource "aws_instance" "web"{
   	}
    	user_data = "${file("user-data-nginx.sh")}"
   	tags = {
+      Name = "Whiskey ${count.index}"
     	Owner = "whiskey"
-    	Server_name = "whiskey"
   	}
   	#subnet_id = "${aws_subnet.public_subnet.id}"
     subnet_id = aws_subnet.public_subnet.*.id[count.index]
@@ -31,8 +34,11 @@ resource "aws_instance" "web"{
 resource "aws_subnet" "private_subnet"{
   count = var.subnets
   vpc_id = aws_vpc.main.id
-  cidr_block = var.cidr_block[count.index]
+  cidr_block = var.cidr_block[count.index + "${var.two}"]
   availability_zone = var.availability_zone[count.index]
+  tags = {
+      Name = "Private subnet ${count.index} + ${var.two}"
+  }
 }
 
 resource "aws_instance" "db"{
@@ -45,4 +51,7 @@ resource "aws_instance" "db"{
       volume_size = var.root_disk_size
     }
     subnet_id = aws_subnet.private_subnet.*.id[count.index]
+    tags = {
+        Name = "DB instance ${count.index}"
+    }
 }
