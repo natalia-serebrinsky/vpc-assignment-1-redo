@@ -8,8 +8,13 @@ variable "availability_zone" {
 	type    = list(string)
 }
 
-variable "cidr_block"{
-	default = ["10.10.2.0/24", "10.10.3.0/24", "10.10.4.0/24", "10.10.5.0/24"]
+variable "cidr_block_public"{
+	default = ["10.10.2.0/24", "10.10.3.0/24"]
+	type = list(string)
+}
+
+variable "cidr_block_private"{
+	default = ["10.10.4.0/24", "10.10.5.0/24"]
 	type = list(string)
 }
 
@@ -32,4 +37,8 @@ variable "web"{
 }
 variable "natgw"{
 	default = 2
+}
+variable "route_tables_names" {
+  type    = list(string)
+  default = ["public", "private-a", "private-b"]
 }
