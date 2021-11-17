@@ -55,3 +55,32 @@ resource "aws_instance" "db"{
         Name = "DB instance ${count.index}"
     }
 }
+
+resource "aws_security_group" "DB_instnaces_access" {
+  vpc_id = aws_vpc.main.id
+  name   = "DB-access"
+
+  tags = {
+    "Name" = "DB-access-${aws_vpc.main.id}"
+  }
+}
+
+resource "aws_security_group_rule" "DB_ssh_acess" {
+  description       = "allow ssh access from anywhere"
+  from_port         = 22
+  protocol          = "tcp"
+  security_group_id = aws_security_group.DB_instnaces_access.id
+  to_port           = 22
+  type              = "ingress"
+  cidr_blocks       = ["0.0.0.0/0"]
+}
+
+resource "aws_security_group_rule" "DB_outbound_anywhere" {
+  description       = "allow outbound traffic to anywhere"
+  from_port         = 0
+  protocol          = "-1"
+  security_group_id = aws_security_group.DB_instnaces_access.id
+  to_port           = 0
+  type              = "egress"
+  cidr_blocks       = ["0.0.0.0/0"]
+}
